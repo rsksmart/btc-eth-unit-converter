@@ -85,9 +85,8 @@ describe('Convert between units', () => {
         let result = converter.weisToBtc(0);
         expect(result).to.equal(0);
         
-        // TODO: pending definition
-        // result = converter.weisToBtc(1);
-        // expect(result).to.equal(0.000000000000000001);
+        result = converter.weisToBtc(1);
+        expect(result).to.equal(0);
 
         result = converter.weisToBtc(1000000000000000000);
         expect(result).to.equal(1);
