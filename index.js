@@ -1,30 +1,30 @@
-let weisToSatoshis = (amountInWeis) => {
+const weisToSatoshis = (amountInWeis) => {
     return Math.floor(amountInWeis / 1e10);
 }
 
-let weisToGwei = (amountInWeis) => {
+const weisToGwei = (amountInWeis) => {
     return amountInWeis / 1e9;
 }
 
-let weisToEth = (amountInWeis) => {
+const weisToEth = (amountInWeis) => {
     return amountInWeis / 1e18;
 }
 
-let satoshisToWeis = (amountInSatoshis) => {
+const satoshisToWeis = (amountInSatoshis) => {
     return amountInSatoshis * 1e10;
 }
 
-let satoshisToEth = (amountInSatoshis) => {
-    let weis = satoshisToWeis(amountInSatoshis);
+const satoshisToEth = (amountInSatoshis) => {
+    const weis = satoshisToWeis(amountInSatoshis);
     return weisToEth(weis);
 }
 
-let satoshisToBtc = (amountInSatoshis) => {
+const satoshisToBtc = (amountInSatoshis) => {
     return amountInSatoshis / 1e8;
 }
 
-let weisToBtc = (amountInWeis) => {
-    let satoshis = weisToSatoshis(amountInWeis);
+const weisToBtc = (amountInWeis) => {
+    const satoshis = weisToSatoshis(amountInWeis);
     return satoshisToBtc(satoshis);
 }
 
