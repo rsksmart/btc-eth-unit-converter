@@ -1,0 +1,24 @@
+{
+  "name": "btc-eth-unit-converter",
+  "version": "0.1.0-beta",
+  "description": "Tool to provide safe conversion between units in BTC and ETH",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc mocha --timeout 10000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsksmart/btc-eth-unit-converter.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rsksmart/btc-eth-unit-converter/issues"
+  },
+  "homepage": "https://github.com/rsksmart/btc-eth-unit-converter#readme",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.0",
+    "nyc": "^15.1.0"
+  }
+}
