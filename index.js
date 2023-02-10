@@ -1,7 +1,4 @@
-const weisToSatoshis = (amountInWeis) => {
-    return Math.floor(amountInWeis / 1e10);
-}
-
+/* ETH units conversion */
 const weisToGwei = (amountInWeis) => {
     return amountInWeis / 1e9;
 }
@@ -10,6 +7,22 @@ const weisToEth = (amountInWeis) => {
     return amountInWeis / 1e18;
 }
 
+/* BTC units conversion */
+const satoshisToBtc = (amountInSatoshis) => {
+    return amountInSatoshis / 1e8;
+}
+
+/* ETH to BTC units conversion */
+const weisToSatoshis = (amountInWeis) => {
+    return Math.floor(amountInWeis / 1e10);
+}
+
+const weisToBtc = (amountInWeis) => {
+    const satoshis = weisToSatoshis(amountInWeis);
+    return satoshisToBtc(satoshis);
+}
+
+/* BTC to ETH units conversion */
 const satoshisToWeis = (amountInSatoshis) => {
     return amountInSatoshis * 1e10;
 }
@@ -19,21 +32,12 @@ const satoshisToEth = (amountInSatoshis) => {
     return weisToEth(weis);
 }
 
-const satoshisToBtc = (amountInSatoshis) => {
-    return amountInSatoshis / 1e8;
-}
-
-const weisToBtc = (amountInWeis) => {
-    const satoshis = weisToSatoshis(amountInWeis);
-    return satoshisToBtc(satoshis);
-}
-
 module.exports = {
-    weisToSatoshis,
     weisToGwei,
     weisToEth,
-    satoshisToWeis,
-    satoshisToEth,
     satoshisToBtc,
-    weisToBtc
+    weisToSatoshis,
+    weisToBtc,
+    satoshisToWeis,
+    satoshisToEth
 }

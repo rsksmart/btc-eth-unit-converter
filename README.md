@@ -8,12 +8,12 @@ Tool to provide safe conversion between units in BTC and ETH
 
 ## Conversions
 
-- weisToSatoshis 
-    - For any value below `10000000000` (1 satoshi) it will return `0`
 - weisToGwei
 - weisToEth
-- satoshisToWeis
-- satoshisToEth
 - satoshisToBtc
+- weisToSatoshis 
+    - For any value below `10000000000` (1 satoshi) it will return `0`
 - weisToBtc
     - For any value below `10000000000` (1 satoshi) it will return `0`
+- satoshisToWeis
+- satoshisToEth
