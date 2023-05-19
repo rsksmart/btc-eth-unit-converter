@@ -37,7 +37,7 @@ const satoshisToBtc = (amountInSatoshis) => {
 }
 
 const btcToSatoshis = (amountInBtc) => {
-    return amountInBtc * SATOSHIS_IN_BTC;
+    return Math.round(amountInBtc * SATOSHIS_IN_BTC);
 }
 
 /* ETH to BTC units conversion */
