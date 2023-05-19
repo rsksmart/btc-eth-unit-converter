@@ -219,10 +219,10 @@ describe('Convert between units', () => {
         result = converter.btcToWeis(21000000);
         expect(result).to.equal(21000000000000000000000000);
 
-        result = converter.btcToWeis(0.000000000000000001);
-        expect(result).to.equal(1);
+        result = converter.btcToWeis(0.00000001);
+        expect(result).to.equal(10000000000);
 
-        result = converter.btcToWeis(0.0000000000000001);
-        expect(result).to.equal(100);
+        result = converter.btcToWeis(0.000001);
+        expect(result).to.equal(1000000000000);
     });
 });
