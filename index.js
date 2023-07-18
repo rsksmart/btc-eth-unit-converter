@@ -1,48 +1,53 @@
+const bigDecimal = require('js-big-decimal');
+
 const WEIS_IN_ETH = 1e18;
 const WEIS_IN_GWEI = 1e9;
 const GWEIS_IN_ETH = 1e9;
-
 const SATOSHIS_IN_BTC = 1e8;
 
 const WEIS_IN_SATOSHI = WEIS_IN_ETH / SATOSHIS_IN_BTC;
 
+const WEIS_TO_GWEI_PRECISION = 9;
+const WEIS_TO_ETH_PRECISION = 18;
+const GWEIS_TO_ETH_PRECISION = 9;
+
 /* ETH units conversion */
 const weisToGwei = (amountInWeis) => {
-    return amountInWeis / WEIS_IN_GWEI;
+   return bigDecimal.divide(amountInWeis, WEIS_IN_GWEI, WEIS_TO_GWEI_PRECISION);
 }
 
 const weisToEth = (amountInWeis) => {
-    return amountInWeis / WEIS_IN_ETH;
+    return bigDecimal.divide(amountInWeis, WEIS_IN_ETH, WEIS_TO_ETH_PRECISION);
 }
 
 const gweisToWeis = (amountInGweis) => {
-    return amountInGweis * WEIS_IN_GWEI;
+    return bigDecimal.multiply(amountInGweis, WEIS_IN_GWEI);
 }
 
 const gweisToEth = (amountInGweis) => {
-    return amountInGweis / GWEIS_IN_ETH;
+    return bigDecimal.divide(amountInGweis, GWEIS_IN_ETH, GWEIS_TO_ETH_PRECISION);
 }
 
 const ethToWeis = (amountInEth) => {
-    return amountInEth * WEIS_IN_ETH;
+    return bigDecimal.multiply(amountInEth, WEIS_IN_ETH);
 }
 
 const ethToGweis = (amountInEth) => {
-    return amountInEth * GWEIS_IN_ETH;
+    return bigDecimal.multiply(amountInEth, GWEIS_IN_ETH);
 }
 
 /* BTC units conversion */
 const satoshisToBtc = (amountInSatoshis) => {
-    return amountInSatoshis / SATOSHIS_IN_BTC;
+    return bigDecimal.divide(amountInSatoshis, SATOSHIS_IN_BTC);
 }
 
 const btcToSatoshis = (amountInBtc) => {
-    return Math.round(amountInBtc * SATOSHIS_IN_BTC);
+    return bigDecimal.multiply(amountInBtc, SATOSHIS_IN_BTC);
 }
 
 /* ETH to BTC units conversion */
 const weisToSatoshis = (amountInWeis) => {
-    return Math.floor(amountInWeis / WEIS_IN_SATOSHI);
+    return bigDecimal.round(bigDecimal.divide(amountInWeis, WEIS_IN_SATOSHI));
 }
 
 const weisToBtc = (amountInWeis) => {
@@ -57,7 +62,7 @@ const ethToSatoshis = (amountInEth) => {
 
 /* BTC to ETH units conversion */
 const satoshisToWeis = (amountInSatoshis) => {
-    return amountInSatoshis * WEIS_IN_SATOSHI;
+    return bigDecimal.multiply(amountInSatoshis, WEIS_IN_SATOSHI);
 }
 
 const satoshisToEth = (amountInSatoshis) => {
