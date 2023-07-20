@@ -129,16 +129,16 @@ describe('Convert between units', () => {
         expect(result).to.equal('0');
         
         result = converter.weisToSatoshis(1);
-        expect(result).to.equal('0');
+        expect(result).to.equal('0.00000000');
         
         result = converter.weisToSatoshis(1000000000);
-        expect(result).to.equal('0');
+        expect(result).to.equal('0.10000000');
 
         result = converter.weisToSatoshis(10000000000);
-        expect(result).to.equal('1');
+        expect(result).to.equal('1.00000000');
 
         result = converter.weisToSatoshis('1000000000000000000');
-        expect(result).to.equal('100000000');
+        expect(result).to.equal('100000000.00000000');
     });
 
     it('Should convert from weis to btc', async () => {
@@ -166,16 +166,16 @@ describe('Convert between units', () => {
         expect(result).to.equal('0');
         
         result = converter.ethToSatoshis(1);
-        expect(result).to.equal('100000000');
+        expect(result).to.equal('100000000.00000000');
 
         result = converter.ethToSatoshis(1000000000);
-        expect(result).to.equal('100000000000000000');
+        expect(result).to.equal('100000000000000000.00000000');
 
         result = converter.ethToSatoshis('0.00000001');
-        expect(result).to.equal('1');
+        expect(result).to.equal('1.00000000');
 
         result = converter.ethToSatoshis('0.000001');
-        expect(result).to.equal('100');
+        expect(result).to.equal('100.00000000');
     });
 
     it('Should convert from satoshis to weis', async () => {
