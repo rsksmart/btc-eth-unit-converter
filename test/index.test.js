@@ -139,6 +139,10 @@ describe('Convert between units', () => {
 
         result = converter.weisToSatoshis('1000000000000000000');
         expect(result).to.equal('100000000.00000000');
+
+        result = converter.weisToSatoshis(10000000001);
+
+        expect(result).to.equal('1.00000000');
     });
 
     it('Should convert from weis to btc', async () => {
