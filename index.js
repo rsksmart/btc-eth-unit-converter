@@ -12,23 +12,50 @@ const SATOSHIS_IN_BTC = 10 ** SATOSHIS_TO_BTC_PRECISION;
 
 const WEIS_IN_SATOSHI = bigDecimal.divide(WEIS_IN_ETH, SATOSHIS_IN_BTC);
 
+const MINIMUM_WEIS_TO_SATOSHIS = 10000000000;
+
+/**
+ * This function helps to check if a base or minimum valid unit is valid, 
+ * like satoshis or weis that are the smallest units of BTC and ETH respectively and cannot be negative or have decimals.
+ * 
+ * Throws an error if the amount in the smallest unit (satoshis or weis) is invalid.
+ * @param {number | string} smallestUnitAmount 
+ */
+const checkValidBaseAmount = (smallestUnitAmount) => {
+    const value = new bigDecimal(smallestUnitAmount)
+    const zero = new bigDecimal(0);
+    // Return early if the value is 0
+    if(value.compareTo(zero) === 0) {
+        return;
+    }
+    const isDecimal = value.compareTo(value.floor()) !== 0;
+    const isNegative = value.compareTo(zero) === -1;
+    if(isDecimal || isNegative) {
+        throw new Error('Amount in the smallest unit must be greater or equal than 0 and cannot have decimals.');
+    }
+};
+
 /* ETH units conversion */
 
 /**
  * 
  * @param {number | string} amountInWeis 
  * @returns {string}
+ * @throws {Error} If the amount in weis is invalid (negative or decimal)
  */
 const weisToGwei = (amountInWeis) => {
-   return bigDecimal.divide(amountInWeis, WEIS_IN_GWEI, WEIS_TO_GWEI_PRECISION);
+    checkValidBaseAmount(amountInWeis);
+    return bigDecimal.divide(amountInWeis, WEIS_IN_GWEI, WEIS_TO_GWEI_PRECISION);
 };
 
 /**
  * 
  * @param {number | string} amountInWeis 
  * @returns {string}
+ * @throws {Error} If the amount in weis is invalid (negative or decimal)
  */
 const weisToEth = (amountInWeis) => {
+    checkValidBaseAmount(amountInWeis);
     return bigDecimal.divide(amountInWeis, WEIS_IN_ETH, WEIS_TO_ETH_PRECISION);
 };
 
@@ -69,8 +96,10 @@ const ethToGweis = (amountInEth) => {
  * 
  * @param {number | string} amountInSatoshis 
  * @returns {string}
+ * @throws {Error} If the amount in satoshis is invalid (negative or decimal)
  */
 const satoshisToBtc = (amountInSatoshis) => {
+    checkValidBaseAmount(amountInSatoshis);
     return bigDecimal.divide(amountInSatoshis, SATOSHIS_IN_BTC);
 };
 
@@ -89,8 +118,17 @@ const btcToSatoshis = (amountInBtc) => {
  * 
  * @param {number | string} amountInWeis 
  * @returns {string}
+ * @throws {Error} If the amount in satoshis is invalid (negative or decimal)
  */
 const weisToSatoshis = (amountInWeis) => {
+    checkValidBaseAmount(amountInWeis);
+    if(bigDecimal.compareTo(amountInWeis, 0) === 0) {
+        return '0';
+    }
+    if (amountInWeis < MINIMUM_WEIS_TO_SATOSHIS) {
+        throw new Error(`Amount in weis must be greater or equal than the minimum weis to satoshis conversion value: ${MINIMUM_WEIS_TO_SATOSHIS}, 
+        other wise it would yield a satoshis value less than 1 with decimals which would not be a valid satoshi value.`);
+    }
     return bigDecimal.divide(amountInWeis, WEIS_IN_SATOSHI);
 };
 
@@ -98,8 +136,10 @@ const weisToSatoshis = (amountInWeis) => {
  * 
  * @param {number | string} amountInWeis 
  * @returns {string}
+ * @throws {Error} If the amount in weis is invalid (negative or decimal)
  */
 const weisToBtc = (amountInWeis) => {
+    checkValidBaseAmount(amountInWeis);
     const satoshis = weisToSatoshis(amountInWeis);
     return satoshisToBtc(satoshis);
 };
@@ -120,8 +160,10 @@ const ethToSatoshis = (amountInEth) => {
  * 
  * @param {number | string} amountInSatoshis 
  * @returns {string}
+ * @throws {Error} If the amount in satoshis is invalid (negative or decimal)
  */
 const satoshisToWeis = (amountInSatoshis) => {
+    checkValidBaseAmount(amountInSatoshis);
     return bigDecimal.multiply(amountInSatoshis, WEIS_IN_SATOSHI);
 };
 
@@ -129,8 +171,10 @@ const satoshisToWeis = (amountInSatoshis) => {
  * 
  * @param {number | string} amountInSatoshis 
  * @returns {string}
+ * @throws {Error} If the amount in satoshis is invalid (negative or decimal)
  */
 const satoshisToEth = (amountInSatoshis) => {
+    checkValidBaseAmount(amountInSatoshis);
     const weis = satoshisToWeis(amountInSatoshis);
     return weisToEth(weis);
 };
