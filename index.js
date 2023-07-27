@@ -15,7 +15,7 @@ const WEIS_IN_SATOSHI = bigDecimal.divide(WEIS_IN_ETH, SATOSHIS_IN_BTC);
 const MINIMUM_WEIS_TO_SATOSHIS = 10000000000;
 
 /**
- * This function helps to check if a base or minimum valid unit is valid, 
+ * This function helps to check if a base unit value is valid, 
  * like satoshis or weis that are the smallest units of BTC and ETH respectively and cannot be negative or have decimals.
  * 
  * Throws an error if the amount in the smallest unit (satoshis or weis) is invalid.
