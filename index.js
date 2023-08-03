@@ -13,7 +13,7 @@ const SATOSHIS_IN_BTC = 10 ** SATOSHIS_TO_BTC_PRECISION;
 const WEIS_IN_SATOSHI = bigDecimal.divide(WEIS_IN_ETH, SATOSHIS_IN_BTC);
 const MINIMUM_WEIS_TO_SATOSHIS = 10000000000;
 const MINIMUM_GWEI = '0.000000001';
-const MINIMUM_ETH_VALUE = '0.000000000000000001';
+const MINIMUM_ETH = '0.000000000000000001';
 const MINIMUM_BTC = '0.00000001';
 
 const isZero = (value) => {
@@ -51,43 +51,13 @@ const checkIsNegative = (value) => {
     }
 };
 
-const checkMinimumGweiValue = (amountInGweis) => {
-    if(isZero(amountInGweis)) {
+const checkMinimum = (value, minimum, unit = '') => {
+    if(isZero(value)) {
         return;
     }
-    checkIsNegative(amountInGweis);
-    if(bigDecimal.compareTo(amountInGweis, MINIMUM_GWEI) === -1) {
-        throw new Error(`The amount in gweis is less than the minimum valid gwei value: ${MINIMUM_GWEI}.`);
-    }
-};
-
-const checkMinimumEthValue = (amountInEth) => {
-    if(isZero(amountInEth)) {
-        return;
-    }
-    checkIsNegative(amountInEth);
-    if(bigDecimal.compareTo(amountInEth, MINIMUM_ETH_VALUE) === -1) {
-        throw new Error(`The amount in eth is less than the minimum valid eth value: ${MINIMUM_ETH_VALUE}.`);
-    }
-};
-
-const checkMinimumBtcValue = (amountInBtc) => {
-    if(isZero(amountInBtc)) {
-        return;
-    }
-    checkIsNegative(amountInBtc);
-    if(bigDecimal.compareTo(amountInBtc, MINIMUM_BTC) === -1) {
-        throw new Error(`The amount in btc is less than the minimum valid btc value: ${MINIMUM_BTC}.`);
-    }
-};
-
-const checkMinimumWeisToSatoshisValue = (amountInWeis) => {
-    if(isZero(amountInWeis)) {
-        return;
-    }
-    checkIsNegative(amountInWeis);
-    if(bigDecimal.compareTo(amountInWeis, MINIMUM_WEIS_TO_SATOSHIS) === -1) {
-        throw new Error(`The amount in weis is less than the minimum valid weis to satoshis value: ${MINIMUM_WEIS_TO_SATOSHIS}.`);
+    checkIsNegative(value);
+    if(bigDecimal.compareTo(value, minimum) === -1) {
+        throw new Error(`The value ${value} ${unit} is less than the minimum valid value for this unit: ${minimum}.`);
     }
 };
 
@@ -116,7 +86,7 @@ const weisToEth = (amountInWeis) => {
 };
 
 const gweisToWeis = (amountInGweis) => {
-    checkMinimumGweiValue(amountInGweis);
+    checkMinimum(amountInGweis, MINIMUM_GWEI, 'gwei');
     return bigDecimal.multiply(amountInGweis, WEIS_IN_GWEI);
 };
 
@@ -126,7 +96,7 @@ const gweisToWeis = (amountInGweis) => {
  * @returns {string}
  */
 const gweisToEth = (amountInGweis) => {
-    checkMinimumGweiValue(amountInGweis);
+    checkMinimum(amountInGweis, MINIMUM_GWEI, 'gwei');
     return bigDecimal.divide(amountInGweis, GWEIS_IN_ETH, GWEIS_TO_ETH_PRECISION);
 }
 
@@ -136,7 +106,9 @@ const gweisToEth = (amountInGweis) => {
  * @returns {string}
  */
 const ethToWeis = (amountInEth) => {
-    checkMinimumEthValue(amountInEth);
+    console.log('amountInEth: ', amountInEth)
+    console.log('MINIMUM_ETH: ', MINIMUM_ETH)
+    checkMinimum(amountInEth, MINIMUM_ETH, 'eth');
     return bigDecimal.multiply(amountInEth, WEIS_IN_ETH);
 };
 
@@ -146,7 +118,7 @@ const ethToWeis = (amountInEth) => {
  * @returns {string}
  */
 const ethToGweis = (amountInEth) => {
-    checkMinimumEthValue(amountInEth);
+    checkMinimum(amountInEth, MINIMUM_ETH, 'eth');
     return bigDecimal.multiply(amountInEth, GWEIS_IN_ETH);
 };
 
@@ -169,7 +141,7 @@ const satoshisToBtc = (amountInSatoshis) => {
  * @returns {string}
  */
 const btcToSatoshis = (amountInBtc) => {
-    checkMinimumBtcValue(amountInBtc);
+    checkMinimum(amountInBtc, MINIMUM_BTC, 'btc');
     return bigDecimal.multiply(amountInBtc, SATOSHIS_IN_BTC);
 };
 
@@ -183,7 +155,9 @@ const btcToSatoshis = (amountInBtc) => {
  */
 const weisToSatoshis = (amountInWeis) => {
     checkValidBaseAmount(amountInWeis);
-    checkMinimumWeisToSatoshisValue(amountInWeis);
+    console.log('amountInWeis: ', amountInWeis)
+    console.log('MINIMUM_WEIS_TO_SATOSHIS: ', MINIMUM_WEIS_TO_SATOSHIS)
+    checkMinimum(amountInWeis, MINIMUM_WEIS_TO_SATOSHIS, 'weis');
     if(bigDecimal.compareTo(amountInWeis, 0) === 0) {
         return '0';
     }

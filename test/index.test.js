@@ -3,10 +3,7 @@ const chai = require('chai');
 const expect = chai.expect;
 
 const errorMessageForNegativeValue = 'The value cannot be negative.';
-const errorMessageForMinimumWeisToSatoshisValue = 'The amount in weis is less than the minimum valid weis to satoshis value: 10000000000.';
-const errorMessageForNegativeOrDecimalWeisToSatoshisValue = 'The amount in gweis is less than the minimum valid gwei value: 0.000000001.';
 const errorMessageForNegativeOrDecimalBaseUnitValue = 'Amount in the smallest unit must be greater or equal than 0 and cannot have decimals.';
-const errorMessageForMinimumEthToWeisValue = 'The amount in eth is less than the minimum valid eth value: 0.000000000000000001.';
 
 describe('Convert between units', () => {
 
@@ -68,7 +65,7 @@ describe('Convert between units', () => {
     });
 
     it('Should fail trying to convert from gweis to weis with invalid gweis values', async () => {
-        expect(() => converter.gweisToWeis('0.0000000001')).to.throw(errorMessageForNegativeOrDecimalWeisToSatoshisValue);
+        expect(() => converter.gweisToWeis('0.0000000001')).to.throw('The value 0.0000000001 gwei is less than the minimum valid value for this unit: 0.000000001');
         expect(() => converter.gweisToWeis('-0.0000000001')).to.throw(errorMessageForNegativeValue);
         expect(() => converter.gweisToWeis('-1')).to.throw(errorMessageForNegativeValue);
     });
@@ -88,7 +85,7 @@ describe('Convert between units', () => {
     });
 
     it('Should fail trying to convert from gweis to eth with invalid gweis values', async () => {
-        expect(() => converter.gweisToEth('0.0000000001')).to.throw(errorMessageForNegativeOrDecimalWeisToSatoshisValue);
+        expect(() => converter.gweisToEth('0.0000000001')).to.throw('The value 0.0000000001 gwei is less than the minimum valid value for this unit: 0.000000001');
         expect(() => converter.gweisToEth('-0.0000000001')).to.throw(errorMessageForNegativeValue);
         expect(() => converter.gweisToEth('-1')).to.throw(errorMessageForNegativeValue);
     });
@@ -111,7 +108,7 @@ describe('Convert between units', () => {
     });
 
     it('Should fail trying to convert from eth to weis with invalid eth values', async () => {
-        expect(() => converter.ethToWeis('0.0000000000000000001')).to.throw(errorMessageForMinimumEthToWeisValue);
+        expect(() => converter.ethToWeis('0.0000000000000000001')).to.throw('The value 0.0000000000000000001 eth is less than the minimum valid value for this unit: 0.000000000000000001.');
         expect(() => converter.ethToWeis('-0.0000000000000000001')).to.throw(errorMessageForNegativeValue);
         expect(() => converter.ethToWeis('-1')).to.throw(errorMessageForNegativeValue);
     });
@@ -134,7 +131,7 @@ describe('Convert between units', () => {
     });
 
     it('Should fail trying to convert from eth to gweis with invalid eth values', async () => {
-        expect(() => converter.ethToGweis('0.0000000000000000001')).to.throw(errorMessageForMinimumEthToWeisValue);
+        expect(() => converter.ethToGweis('0.0000000000000000001')).to.throw('The value 0.0000000000000000001 eth is less than the minimum valid value for this unit: 0.000000000000000001');
         expect(() => converter.ethToGweis('-0.0000000000000000001')).to.throw(errorMessageForNegativeValue);
         expect(() => converter.ethToGweis('-1')).to.throw(errorMessageForNegativeValue);
     });
@@ -174,8 +171,7 @@ describe('Convert between units', () => {
     });
 
     it('Should fail trying to convert from btc to satoshis with invalid btc values', async () => {
-        const errorMessageForMinimumBtcToSatoshisValue = 'The amount in btc is less than the minimum valid btc value: 0.00000001.';
-        expect(() => converter.btcToSatoshis('0.000000001')).to.throw(errorMessageForMinimumBtcToSatoshisValue);
+        expect(() => converter.btcToSatoshis('0.000000001')).to.throw('The value 0.000000001 btc is less than the minimum valid value for this unit: 0.00000001');
         expect(() => converter.btcToSatoshis('-0.000000001')).to.throw(errorMessageForNegativeValue);
         expect(() => converter.btcToSatoshis('-1')).to.throw(errorMessageForNegativeValue);
     });
@@ -196,8 +192,8 @@ describe('Convert between units', () => {
     });
 
     it('Should throw an error trying to convert from weis to satoshis with invalid values', async () => {
-        expect(() => converter.weisToSatoshis(1)).to.throw(errorMessageForMinimumWeisToSatoshisValue);
-        expect(() => converter.weisToSatoshis(1000000000)).to.throw(errorMessageForMinimumWeisToSatoshisValue);
+        expect(() => converter.weisToSatoshis(1)).to.throw('The value 1 weis is less than the minimum valid value for this unit: 10000000000');
+        expect(() => converter.weisToSatoshis(1000000000)).to.throw('The value 1000000000 weis is less than the minimum valid value for this unit: 10000000000');
 
         expect(() => converter.weisToSatoshis(-1)).to.throw(errorMessageForNegativeOrDecimalBaseUnitValue);
         expect(() => converter.weisToSatoshis(0.9)).to.throw(errorMessageForNegativeOrDecimalBaseUnitValue);
@@ -247,7 +243,7 @@ describe('Convert between units', () => {
     it('Should throw an error trying to convert from eth to satoshis with invalid values', async () => {
         expect(() => converter.ethToSatoshis(-1)).to.throw(errorMessageForNegativeValue);
         expect(() => converter.ethToSatoshis(-0.9)).to.throw(errorMessageForNegativeValue);
-        expect(() => converter.ethToSatoshis('0.000000000000000001')).to.throw(errorMessageForMinimumWeisToSatoshisValue);
+        expect(() => converter.ethToSatoshis('0.000000000000000001')).to.throw('The value 1 weis is less than the minimum valid value for this unit: 10000000000');
     });
 
     it('Should convert from satoshis to weis', async () => {
