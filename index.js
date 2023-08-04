@@ -11,10 +11,9 @@ const GWEIS_IN_ETH = 10 ** GWEIS_TO_ETH_PRECISION;
 const SATOSHIS_IN_BTC = 10 ** SATOSHIS_TO_BTC_PRECISION;
 
 const WEIS_IN_SATOSHI = bigDecimal.divide(WEIS_IN_ETH, SATOSHIS_IN_BTC);
-const MINIMUM_WEIS_TO_SATOSHIS = 10000000000;
-const MINIMUM_GWEI = '0.000000001';
-const MINIMUM_ETH = '0.000000000000000001';
-const MINIMUM_BTC = '0.00000001';
+const MINIMUM_GWEI = bigDecimal.divide(1, WEIS_IN_GWEI, WEIS_TO_GWEI_PRECISION);
+const MINIMUM_ETH = bigDecimal.divide(1, WEIS_IN_ETH, WEIS_TO_ETH_PRECISION);
+const MINIMUM_BTC = bigDecimal.divide(1, SATOSHIS_IN_BTC, SATOSHIS_TO_BTC_PRECISION);
 
 const isZero = (value) => {
     return bigDecimal.compareTo(value, 0) === 0;
@@ -106,8 +105,6 @@ const gweisToEth = (amountInGweis) => {
  * @returns {string}
  */
 const ethToWeis = (amountInEth) => {
-    console.log('amountInEth: ', amountInEth)
-    console.log('MINIMUM_ETH: ', MINIMUM_ETH)
     checkMinimum(amountInEth, MINIMUM_ETH, 'eth');
     return bigDecimal.multiply(amountInEth, WEIS_IN_ETH);
 };
@@ -155,16 +152,7 @@ const btcToSatoshis = (amountInBtc) => {
  */
 const weisToSatoshis = (amountInWeis) => {
     checkValidBaseAmount(amountInWeis);
-    console.log('amountInWeis: ', amountInWeis)
-    console.log('MINIMUM_WEIS_TO_SATOSHIS: ', MINIMUM_WEIS_TO_SATOSHIS)
-    checkMinimum(amountInWeis, MINIMUM_WEIS_TO_SATOSHIS, 'weis');
-    if(bigDecimal.compareTo(amountInWeis, 0) === 0) {
-        return '0';
-    }
-    if (amountInWeis < MINIMUM_WEIS_TO_SATOSHIS) {
-        throw new Error(`Amount in weis must be greater or equal than the minimum weis to satoshis conversion value: ${MINIMUM_WEIS_TO_SATOSHIS}, 
-        other wise it would yield a satoshis value less than 1 with decimals which would not be a valid satoshi value.`);
-    }
+    checkMinimum(amountInWeis, WEIS_IN_SATOSHI, 'weis');
     return bigDecimal.divide(amountInWeis, WEIS_IN_SATOSHI);
 };
 
