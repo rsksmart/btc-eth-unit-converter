@@ -1,62 +1,98 @@
-const bigDecimal = require('js-big-decimal');
+const decimal = require('decimal.js');
 
-const WEIS_TO_GWEI_PRECISION = 9;
-const WEIS_TO_ETH_PRECISION = 18;
-const GWEIS_TO_ETH_PRECISION = 9;
-const SATOSHIS_TO_BTC_PRECISION = 8;
+const ZERO = new decimal(0);
+const ONE = new decimal(1);
+const TEN = new decimal(10);
 
-const WEIS_IN_ETH = 10 ** WEIS_TO_ETH_PRECISION;
-const WEIS_IN_GWEI = 10 ** WEIS_TO_GWEI_PRECISION;
-const GWEIS_IN_ETH = 10 ** GWEIS_TO_ETH_PRECISION;
-const SATOSHIS_IN_BTC = 10 ** SATOSHIS_TO_BTC_PRECISION;
+const SATOSHIS_TO_BTC_PRECISION = new decimal(8);
+const WEIS_TO_GWEI_PRECISION = new decimal(9);
+const GWEIS_TO_ETH_PRECISION = new decimal(9);
+const WEIS_TO_ETH_PRECISION = new decimal(18);
 
-const WEIS_IN_SATOSHI = bigDecimal.divide(WEIS_IN_ETH, SATOSHIS_IN_BTC);
-const MINIMUM_GWEI = bigDecimal.divide(1, WEIS_IN_GWEI, WEIS_TO_GWEI_PRECISION);
-const MINIMUM_ETH = bigDecimal.divide(1, WEIS_IN_ETH, WEIS_TO_ETH_PRECISION);
-const MINIMUM_BTC = bigDecimal.divide(1, SATOSHIS_IN_BTC, SATOSHIS_TO_BTC_PRECISION);
+const WEIS_IN_ETH = TEN.toPower(WEIS_TO_ETH_PRECISION);
+const WEIS_IN_GWEI = TEN.toPower(WEIS_TO_GWEI_PRECISION);
+const GWEIS_IN_ETH = TEN.toPower(GWEIS_TO_ETH_PRECISION);
+const SATOSHIS_IN_BTC = TEN.toPower(SATOSHIS_TO_BTC_PRECISION);
 
+const WEIS_IN_SATOSHI = WEIS_IN_ETH.dividedBy(SATOSHIS_IN_BTC);
+const MINIMUM_GWEI = ONE.dividedBy(WEIS_IN_GWEI);
+const MINIMUM_ETH = ONE.dividedBy(WEIS_IN_ETH);
+const MINIMUM_BTC = ONE.dividedBy(SATOSHIS_IN_BTC);
+
+/**
+ * Checks if the provided value is zero, returns true if it is, false otherwise.
+ * @param {decimal.Decimal.Value} value 
+ * @returns {boolean}
+ */
 const isZero = (value) => {
-    return bigDecimal.compareTo(value, 0) === 0;
+    return value.comparedTo(ZERO) === 0;
+};
+
+/**
+ * Checks if the provided value is decimal, returns true if it is, false otherwise.
+ * @param {decimal.Decimal.Value} value 
+ * @returns 
+ */
+const isDecimal = (value) => {
+    return value.comparedTo(value.floor()) !== 0;
+};
+
+/**
+ * Checks if the provided value is negative, returns true if it is, false otherwise.
+ * @param {decimal.Decimal.Value} value 
+ * @returns {boolean}
+ */
+const isNegative = (value) => {
+    return value.comparedTo(ZERO) === -1;
 };
 
 /**
  * This function helps to check if a base unit value is valid, 
- * like satoshis or weis that are the smallest units of BTC and ETH respectively and cannot be negative or have decimals.
+ * like satoshis or weis that are the base/smallest units of BTC and ETH respectively and cannot be negative or have decimals.
  * 
  * Throws an error if the amount in the smallest unit (satoshis or weis) is invalid.
- * @param {number | string} smallestUnitAmount 
+ * @param {decimal.Decimal.Value} baseUnitAmount 
+ * @returns {void}
+ * @throws {Error} If the amount in the base unit is invalid (negative or decimal)
  */
-const checkValidBaseAmount = (smallestUnitAmount) => {
-    const value = new bigDecimal(smallestUnitAmount)
-    const zero = new bigDecimal(0);
+const checkValidBaseAmount = (baseUnitAmount) => {
     // Return early if the value is 0
-    if(value.compareTo(zero) === 0) {
+    if(baseUnitAmount.comparedTo(ZERO) === 0) {
         return;
     }
-    const isDecimal = value.compareTo(value.floor()) !== 0;
-    const isNegative = value.compareTo(zero) === -1;
-    if(isDecimal || isNegative) {
+    if(isDecimal(baseUnitAmount) || isNegative(baseUnitAmount)) {
         throw new Error('Amount in the smallest unit must be greater or equal than 0 and cannot have decimals.');
     }
 };
 
-const isNegative = (value) => {
-    return bigDecimal.compareTo(value, 0) === -1;
-};
-
+/**
+ * Checks if the value is negative. Throws error if it is.
+ * @param {decimal.Decimal.Value} value 
+ * @returns {void}
+ * @throws {Error} If the value is negative
+ * 
+ */
 const checkIsNegative = (value) => {
     if(isNegative(value)) {
         throw new Error('The value cannot be negative.');
     }
 };
 
+/**
+ * Checks if the value is smaller than the minimum. Throws error if it is.
+ * @param {decimal.Decimal.Value} value 
+ * @param {decimal.Decimal.Value} minimum 
+ * @param {string} unit 
+ * @returns {void}
+ * @throws {Error} If the value is less than the minimum
+ */
 const checkMinimum = (value, minimum, unit = '') => {
     if(isZero(value)) {
         return;
     }
     checkIsNegative(value);
-    if(bigDecimal.compareTo(value, minimum) === -1) {
-        throw new Error(`The value ${value} ${unit} is less than the minimum valid value for this unit: ${minimum}.`);
+    if(value.comparedTo(minimum) === -1) {
+        throw new Error(`The value ${value.toFixed()} ${unit} is less than the minimum valid value for this unit: ${minimum.toFixed()}.`);
     }
 };
 
@@ -66,27 +102,36 @@ const checkMinimum = (value, minimum, unit = '') => {
  * 
  * @param {number | string} amountInWeis 
  * @returns {string}
- * @throws {Error} If the amount in weis is invalid (negative or decimal)
+ * @throws {Error} If the amount in weis is invalid, negative or decimal
  */
 const weisToGwei = (amountInWeis) => {
-    checkValidBaseAmount(amountInWeis);
-    return bigDecimal.divide(amountInWeis, WEIS_IN_GWEI, WEIS_TO_GWEI_PRECISION);
+    const safeAmountInWeis = new decimal(amountInWeis);
+    checkValidBaseAmount(safeAmountInWeis);
+    return safeAmountInWeis.dividedBy(WEIS_IN_GWEI).toFixed();
 };
 
 /**
  * 
  * @param {number | string} amountInWeis 
  * @returns {string}
- * @throws {Error} If the amount in weis is invalid (negative or decimal)
+ * @throws {Error} If the amount in weis is invalid, negative or decimal
  */
 const weisToEth = (amountInWeis) => {
-    checkValidBaseAmount(amountInWeis);
-    return bigDecimal.divide(amountInWeis, WEIS_IN_ETH, WEIS_TO_ETH_PRECISION);
+    const saveAmountInWeis = new decimal(amountInWeis);
+    checkValidBaseAmount(saveAmountInWeis);
+    return saveAmountInWeis.dividedBy(WEIS_IN_ETH).toFixed();
 };
 
+/**
+ * 
+ * @param {number | string} amountInGweis 
+ * @returns {string}
+ * @throws {Error} If the amount in gweis is invalid, negative or decimal
+ */
 const gweisToWeis = (amountInGweis) => {
-    checkMinimum(amountInGweis, MINIMUM_GWEI, 'gwei');
-    return bigDecimal.multiply(amountInGweis, WEIS_IN_GWEI);
+    const safeAmountInGweis = new decimal(amountInGweis);
+    checkMinimum(safeAmountInGweis, MINIMUM_GWEI, 'gwei');
+    return safeAmountInGweis.times(WEIS_IN_GWEI).toFixed();
 };
 
 /**
@@ -95,8 +140,9 @@ const gweisToWeis = (amountInGweis) => {
  * @returns {string}
  */
 const gweisToEth = (amountInGweis) => {
-    checkMinimum(amountInGweis, MINIMUM_GWEI, 'gwei');
-    return bigDecimal.divide(amountInGweis, GWEIS_IN_ETH, GWEIS_TO_ETH_PRECISION);
+    const safeAmountInGweis = new decimal(amountInGweis);
+    checkMinimum(safeAmountInGweis, MINIMUM_GWEI, 'gwei');
+    return safeAmountInGweis.dividedBy(GWEIS_IN_ETH).toFixed();
 }
 
 /**
@@ -105,8 +151,9 @@ const gweisToEth = (amountInGweis) => {
  * @returns {string}
  */
 const ethToWeis = (amountInEth) => {
-    checkMinimum(amountInEth, MINIMUM_ETH, 'eth');
-    return bigDecimal.multiply(amountInEth, WEIS_IN_ETH);
+    const safeAmountInEth = new decimal(amountInEth);
+    checkMinimum(safeAmountInEth, MINIMUM_ETH, 'eth');
+    return safeAmountInEth.times(WEIS_IN_ETH).toFixed();
 };
 
 /**
@@ -115,8 +162,9 @@ const ethToWeis = (amountInEth) => {
  * @returns {string}
  */
 const ethToGweis = (amountInEth) => {
-    checkMinimum(amountInEth, MINIMUM_ETH, 'eth');
-    return bigDecimal.multiply(amountInEth, GWEIS_IN_ETH);
+    const safeAmountInEth = new decimal(amountInEth);
+    checkMinimum(safeAmountInEth, MINIMUM_ETH, 'eth');
+    return safeAmountInEth.times(GWEIS_IN_ETH).toFixed();
 };
 
 /* BTC units conversion */
@@ -128,8 +176,9 @@ const ethToGweis = (amountInEth) => {
  * @throws {Error} If the amount in satoshis is invalid (negative or decimal)
  */
 const satoshisToBtc = (amountInSatoshis) => {
-    checkValidBaseAmount(amountInSatoshis);
-    return bigDecimal.divide(amountInSatoshis, SATOSHIS_IN_BTC);
+    const safeAmountInSatoshis = new decimal(amountInSatoshis);
+    checkValidBaseAmount(safeAmountInSatoshis);
+    return safeAmountInSatoshis.dividedBy(SATOSHIS_IN_BTC).toFixed();
 };
 
 /**
@@ -138,8 +187,9 @@ const satoshisToBtc = (amountInSatoshis) => {
  * @returns {string}
  */
 const btcToSatoshis = (amountInBtc) => {
-    checkMinimum(amountInBtc, MINIMUM_BTC, 'btc');
-    return bigDecimal.multiply(amountInBtc, SATOSHIS_IN_BTC);
+    const safeAmountInBtc = new decimal(amountInBtc);
+    checkMinimum(safeAmountInBtc, MINIMUM_BTC, 'btc');
+    return safeAmountInBtc.times(SATOSHIS_IN_BTC).toFixed();
 };
 
 /* ETH to BTC units conversion */
@@ -151,16 +201,17 @@ const btcToSatoshis = (amountInBtc) => {
  * @throws {Error} If the amount in satoshis is invalid (negative or decimal)
  */
 const weisToSatoshis = (amountInWeis) => {
-    checkValidBaseAmount(amountInWeis);
-    checkMinimum(amountInWeis, WEIS_IN_SATOSHI, 'weis');
-    return bigDecimal.divide(amountInWeis, WEIS_IN_SATOSHI);
+    const safeAmountInWeis = new decimal(amountInWeis);
+    checkValidBaseAmount(safeAmountInWeis);
+    checkMinimum(safeAmountInWeis, WEIS_IN_SATOSHI, 'weis');
+    return safeAmountInWeis.dividedBy(WEIS_IN_SATOSHI).toFixed(0);
 };
 
 /**
  * 
  * @param {number | string} amountInWeis 
  * @returns {string}
- * @throws {Error} If the amount in weis is invalid (negative or decimal)
+ * @throws {Error} If the amount in weis is invalid, negative or decimal
  */
 const weisToBtc = (amountInWeis) => {
     const satoshis = weisToSatoshis(amountInWeis);
@@ -186,8 +237,9 @@ const ethToSatoshis = (amountInEth) => {
  * @throws {Error} If the amount in satoshis is invalid (negative or decimal)
  */
 const satoshisToWeis = (amountInSatoshis) => {
-    checkValidBaseAmount(amountInSatoshis);
-    return bigDecimal.multiply(amountInSatoshis, WEIS_IN_SATOSHI);
+    const safeAmountInSatoshis = new decimal(amountInSatoshis);
+    checkValidBaseAmount(safeAmountInSatoshis);
+    return safeAmountInSatoshis.times(WEIS_IN_SATOSHI).toFixed();
 };
 
 /**
@@ -197,7 +249,8 @@ const satoshisToWeis = (amountInSatoshis) => {
  * @throws {Error} If the amount in satoshis is invalid (negative or decimal)
  */
 const satoshisToEth = (amountInSatoshis) => {
-    checkValidBaseAmount(amountInSatoshis);
+    const safeAmountInSatoshis = new decimal(amountInSatoshis);
+    checkValidBaseAmount(safeAmountInSatoshis);
     const weis = satoshisToWeis(amountInSatoshis);
     return weisToEth(weis);
 };

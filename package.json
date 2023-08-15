@@ -22,6 +22,6 @@
     "nyc": "^15.1.0"
   },
   "dependencies": {
-    "js-big-decimal": "^1.4.1"
+    "decimal.js": "^10.4.3"
   }
 }

@@ -15,13 +15,13 @@ describe('Convert between units', () => {
         expect(result).to.equal('0.000000001');
         
         result = converter.weisToGwei(100000000);
-        expect(result).to.equal('0.100000000');
+        expect(result).to.equal('0.1');
 
         result = converter.weisToGwei(1000000000);
-        expect(result).to.equal('1.000000000');
+        expect(result).to.equal('1');
 
         result = converter.weisToGwei('1000000000000000000000');
-        expect(result).to.equal('1000000000000.000000000');
+        expect(result).to.equal('1000000000000');
     });
 
     it('Should throw an error while trying to convert from weis to gweis with invalid values', async () => {
@@ -38,10 +38,10 @@ describe('Convert between units', () => {
         expect(result).to.equal('0.000000000000000001');
 
         result = converter.weisToEth(1000000000000000000);
-        expect(result).to.equal('1.000000000000000000');
+        expect(result).to.equal('1');
 
         result = converter.weisToEth('100000000000000000000');
-        expect(result).to.equal('100.000000000000000000');
+        expect(result).to.equal('100');
     });
 
     it('Should throw an error while trying to convert from weis to eth with invalid values', async () => {
@@ -78,10 +78,10 @@ describe('Convert between units', () => {
         expect(result).to.equal('0.000000001');
 
         result = converter.gweisToEth(1000000000);
-        expect(result).to.equal('1.000000000');
+        expect(result).to.equal('1');
 
         result = converter.gweisToEth(100000000000);
-        expect(result).to.equal('100.000000000');
+        expect(result).to.equal('100');
     });
 
     it('Should fail trying to convert from gweis to eth with invalid gweis values', async () => {
@@ -144,10 +144,10 @@ describe('Convert between units', () => {
         expect(result).to.equal('0.00000001');
 
         result = converter.satoshisToBtc(100000000);
-        expect(result).to.equal('1.00000000');
+        expect(result).to.equal('1');
 
         result = converter.satoshisToBtc(2100000000000000);
-        expect(result).to.equal('21000000.00000000');
+        expect(result).to.equal('21000000');
     });
 
     it('Should throw an error trying to convert from satoshis to btc with invalid values', async () => {
@@ -181,14 +181,14 @@ describe('Convert between units', () => {
         expect(result).to.equal('0');
 
         result = converter.weisToSatoshis(10000000000);
-        expect(result).to.equal('1.00000000');
+        expect(result).to.equal('1');
 
         result = converter.weisToSatoshis('1000000000000000000');
-        expect(result).to.equal('100000000.00000000');
+        expect(result).to.equal('100000000');
 
         result = converter.weisToSatoshis(10000000001);
 
-        expect(result).to.equal('1.00000000');
+        expect(result).to. equal('1');
     });
 
     it('Should throw an error trying to convert from weis to satoshis with invalid values', async () => {
@@ -205,16 +205,16 @@ describe('Convert between units', () => {
         expect(result).to.equal('0');
 
         result = converter.weisToBtc('100000000000000000');
-        expect(result).to.equal('0.10000000');
+        expect(result).to.equal('0.1');
 
         result = converter.weisToBtc('1000000000000000000');
-        expect(result).to.equal('1.00000000');
+        expect(result).to.equal('1');
 
         result = converter.weisToBtc('100000000000000000000');
-        expect(result).to.equal('100.00000000');
+        expect(result).to.equal('100');
 
         result = converter.weisToBtc('21000000000000000000000000');
-        expect(result).to.equal('21000000.00000000');
+        expect(result).to.equal('21000000');
     });
 
     it('Should throw an error trying to convert from weis to btc with invalid values', async () => {
@@ -228,16 +228,16 @@ describe('Convert between units', () => {
         expect(result).to.equal('0');
         
         result = converter.ethToSatoshis(1);
-        expect(result).to.equal('100000000.00000000');
+        expect(result).to.equal('100000000');
 
         result = converter.ethToSatoshis(1000000000);
-        expect(result).to.equal('100000000000000000.00000000');
+        expect(result).to.equal('100000000000000000');
 
         result = converter.ethToSatoshis('0.00000001');
-        expect(result).to.equal('1.00000000');
+        expect(result).to.equal('1');
 
         result = converter.ethToSatoshis('0.000001');
-        expect(result).to.equal('100.00000000');
+        expect(result).to.equal('100');
     });
 
     it('Should throw an error trying to convert from eth to satoshis with invalid values', async () => {
@@ -271,13 +271,13 @@ describe('Convert between units', () => {
         expect(result).to.equal('0');
         
         result = converter.satoshisToEth(1);
-        expect(result).to.equal('0.000000010000000000');
+        expect(result).to.equal('0.00000001');
 
         result = converter.satoshisToEth(100000000);
-        expect(result).to.equal('1.000000000000000000');
+        expect(result).to.equal('1');
 
         result = converter.satoshisToEth(2100000000000000);
-        expect(result).to.equal('21000000.000000000000000000');
+        expect(result).to.equal('21000000');
     });
 
     it('Should throw an error trying to convert from satoshis to eth with invalid values', async () => {
