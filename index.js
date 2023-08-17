@@ -131,7 +131,7 @@ const weisToEth = (amountInWeis) => {
 const gweisToWeis = (amountInGweis) => {
     const safeAmountInGweis = new decimal(amountInGweis);
     checkMinimum(safeAmountInGweis, MINIMUM_GWEI, 'gwei');
-    return safeAmountInGweis.times(WEIS_IN_GWEI).toFixed();
+    return safeAmountInGweis.times(WEIS_IN_GWEI).toFixed(0);
 };
 
 /**
@@ -153,7 +153,7 @@ const gweisToEth = (amountInGweis) => {
 const ethToWeis = (amountInEth) => {
     const safeAmountInEth = new decimal(amountInEth);
     checkMinimum(safeAmountInEth, MINIMUM_ETH, 'eth');
-    return safeAmountInEth.times(WEIS_IN_ETH).toFixed();
+    return safeAmountInEth.times(WEIS_IN_ETH).toFixed(0);
 };
 
 /**
@@ -189,7 +189,7 @@ const satoshisToBtc = (amountInSatoshis) => {
 const btcToSatoshis = (amountInBtc) => {
     const safeAmountInBtc = new decimal(amountInBtc);
     checkMinimum(safeAmountInBtc, MINIMUM_BTC, 'btc');
-    return safeAmountInBtc.times(SATOSHIS_IN_BTC).toFixed();
+    return safeAmountInBtc.times(SATOSHIS_IN_BTC).toFixed(0);
 };
 
 /* ETH to BTC units conversion */
@@ -239,7 +239,7 @@ const ethToSatoshis = (amountInEth) => {
 const satoshisToWeis = (amountInSatoshis) => {
     const safeAmountInSatoshis = new decimal(amountInSatoshis);
     checkValidBaseAmount(safeAmountInSatoshis);
-    return safeAmountInSatoshis.times(WEIS_IN_SATOSHI).toFixed();
+    return safeAmountInSatoshis.times(WEIS_IN_SATOSHI).toFixed(0);
 };
 
 /**
