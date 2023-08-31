@@ -1,6 +1,4 @@
-# Disclaimer
-
-This is a beta version until audited by the security team. Any comments or suggestions feel free to contribute or reach out at our [open slack](https://developers.rsk.co/slack).
+<img src="./rootstock_logo.png" alt="Rootstock" />
 
 # btc-eth-unit-converter
 
