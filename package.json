@@ -1,6 +1,6 @@
 {
   "name": "btc-eth-unit-converter",
-  "version": "0.4.0-beta",
+  "version": "1.0.0",
   "description": "Tool to provide safe conversion between units in BTC and ETH",
   "main": "index.js",
   "scripts": {
