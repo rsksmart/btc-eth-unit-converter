@@ -43,4 +43,4 @@ To run test with coverage, run:
 
 ## Contributing
 
-Any comments or suggestions feel free to contribute or reach out at our [discord server](https://discord.gg/rootstock-842021106956238848).
+Any comments or suggestions feel free to contribute or reach out at our [discord server](https://discord.gg/rootstock).
