@@ -21,7 +21,7 @@
     "nyc": "^15.1.0"
   },
   "dependencies": {
-    "decimal.js": "^10.4.3"
+    "decimal.js": "^10.6.0"
   },
   "types": "./index.d.ts",
   "keywords": [
