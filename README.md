@@ -1,3 +1,7 @@
+![Build and Test](https://github.com/rsksmart/btc-eth-unit-converter/actions/workflows/build-test.yml/badge.svg)
+[![CodeQL](https://github.com/rsksmart/btc-eth-unit-converter/workflows/CodeQL/badge.svg)](https://github.com/rsksmart/btc-eth-unit-converter/actions?query=workflow%3ACodeQL)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/rsksmart/btc-eth-unit-converter/badge)](https://scorecard.dev/viewer/?uri=github.com/rsksmart/btc-eth-unit-converter)
+
 <img src="./rootstock_logo.png" alt="Rootstock" />
 
 # btc-eth-unit-converter
